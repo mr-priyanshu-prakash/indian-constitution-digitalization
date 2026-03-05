@@ -143,7 +143,7 @@ col1, col2 = st.columns([1, 2])
 with col1:
     st.markdown('<div class="input-label">Name of Accused</div>', unsafe_allow_html=True)
     accused_input = st.text_input(
-        label="accused", placeholder="e.g., Tunny",
+        label="accused", placeholder="e.g.,Gurmeet Singh",
         label_visibility="collapsed", key="accused"
     )
 
@@ -151,7 +151,7 @@ with col2:
     st.markdown('<div class="input-label">Crimes Committed</div>', unsafe_allow_html=True)
     crimes_input = st.text_area(
         label="crimes",
-        placeholder="e.g., Rape of a minor girl child and murder of the victim",
+        placeholder="e.g.,Kidnapping and murder of the victim",
         height=80, label_visibility="collapsed", key="crimes"
     )
 
