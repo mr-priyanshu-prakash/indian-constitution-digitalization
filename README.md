@@ -1,11 +1,11 @@
-# 🏛️ Indian Constitution Legal RAG System
+# Indian Constitution Legal RAG System
 
 RAG-powered legal advisor using BNS 2023, IPC, POCSO, CrPC & Constitution of India.
 Deployed as a single Streamlit app on Streamlit Cloud.
 
----
 
-## 🏗️ Architecture
+
+## Architecture
 
 ```
 User Query
@@ -20,9 +20,7 @@ RAG Pipeline (rag_pipeline.py)
 Structured Legal Judgment
 ```
 
----
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 indian-constitution-digitalization/
@@ -34,12 +32,12 @@ indian-constitution-digitalization/
 ├── .env.example          ← Copy to .env for local dev
 ├── .gitignore            ← Protects secrets
 └── .streamlit/
-    └── secrets.toml      ← Streamlit Cloud secrets (never commit!)
+    └── secrets.toml      ← Streamlit Cloud secrets 
 ```
 
----
 
-## 🚀 Local Setup
+
+##  Local Setup
 
 ```bash
 # 1. Install
@@ -58,7 +56,7 @@ streamlit run streamlit_app.py
 
 ---
 
-## ☁️ Deploy to Streamlit Cloud
+## Deploy to Streamlit Cloud
 
 ### Step 1 — Push to GitHub
 ```bash
@@ -85,10 +83,4 @@ CHROMA_DATABASE = "indian_con_digital"
 ```
 7. Click **Deploy!**
 
-Your app will be live at:
-`https://yourusername-indian-constitution-rag-streamlit-app-xxxxx.streamlit.app`
 
----
-
-## ⚠️ Disclaimer
-For educational and research purposes only. Not legal advice.
