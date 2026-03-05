@@ -36,20 +36,13 @@ def _get_embedder():
 def _get_collection():
     global _collection
     if _collection is None:
-        print("[RAG] Connecting to Chroma Cloud...")
+        print("[RAG] Using local Chroma database...")
 
-        client = chromadb.HttpClient(
-            host=CHROMA_HOST,
-            port=443,
-            ssl=True,
-            headers={"x-chroma-token": CHROMA_API_KEY},
-            tenant=CHROMA_TENANT,
-            database=CHROMA_DATABASE,
-        )
+        client = chromadb.PersistentClient(path="./chroma_db")
 
-        _collection = client.get_collection(COLLECTION_NAME)
+        _collection = client.get_or_create_collection(COLLECTION_NAME)
 
-        print(f"[RAG] Chroma Cloud connected — collection: {COLLECTION_NAME}")
+        print(f"[RAG] Local Chroma ready — collection: {COLLECTION_NAME}")
 
     return _collection
 
