@@ -31,7 +31,24 @@ st.markdown("""
 background: #060912;
 border-right: 1px solid #c9a84c33;
 }
+.stMarkdown pre {
+    background: #0c1120 !important;
+    border: 1px solid #c9a84c33 !important;
+    border-radius: 4px !important;
+    padding: 1rem !important;
+}
 
+.stMarkdown pre code {
+    color: #f0e6d3 !important;
+    background: transparent !important;
+}
+
+code {
+    background: #1a2035 !important;
+    color: #98d8a8 !important;
+    padding: 0.2rem 0.4rem !important;
+    border-radius: 3px !important;
+}
 .hero-header {
 text-align:center;
 padding:2.5rem 0 1.5rem;
