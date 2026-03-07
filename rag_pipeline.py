@@ -208,3 +208,64 @@ List 5 important legal observations.
 """
 
     return prompt
+
+
+# ---------------- GENERATION ----------------
+
+def generate_verdict(prompt: str) -> str:
+
+    client = _get_groq()
+
+    print(f"[RAG] Sending to Groq ({GROQ_MODEL})...")
+
+    response = client.chat.completions.create(
+        model=GROQ_MODEL,
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "You are an expert Indian legal advisor. "
+                    "Always give complete structured legal analysis "
+                    "with exact BNS 2023, IPC, and POCSO section numbers. "
+                    "Never truncate. Always complete the full judgment."
+                )
+            },
+            {"role": "user", "content": prompt}
+        ],
+        temperature=GROQ_TEMP,
+        max_tokens=GROQ_MAX_TOKENS,
+    )
+
+    verdict = response.choices[0].message.content.strip()
+    usage = response.usage
+    print(f"[RAG] Done — tokens: {usage.total_tokens}")
+
+    return verdict
+
+
+# ---------------- MAIN FUNCTION ----------------
+
+def analyze_case(accused: str, crimes: str) -> dict:
+
+    query = f"Indian law punishment sections for: {crimes}. BNS IPC POCSO imprisonment death penalty"
+
+    chunks = retrieve_chunks(query)
+
+    print(f"[RAG] Retrieved {len(chunks)} chunks from: {set(c['source'] for c in chunks)}")
+
+    prompt = build_prompt(accused, crimes, chunks)
+    verdict = generate_verdict(prompt)
+
+    return {
+        "accused":  accused,
+        "crimes":   crimes,
+        "judgment": verdict,
+        "sources":  [
+            {
+                "source":    c["source"],
+                "text":      c["text"][:400] + "...",
+                "relevance": c["relevance"]
+            }
+            for c in chunks
+        ]
+    }
