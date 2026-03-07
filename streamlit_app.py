@@ -2,7 +2,6 @@ import streamlit as st
 from datetime import date
 import sys
 import os
-
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # ---------------- PAGE CONFIG ----------------
@@ -243,7 +242,7 @@ with btn_col:
 if analyze_btn:
 
     accused = st.session_state.get("accused", accused_input).strip()
-    crimes = st.session_state.get("crimes", crimes_input).strip()
+    crimes  = st.session_state.get("crimes",  crimes_input).strip()
 
     if not accused:
         st.warning("Please enter accused name")
@@ -261,61 +260,73 @@ if analyze_btn:
 
                 result = analyze_case(accused=accused, crimes=crimes)
 
-                # ---------------- COURT HEADER ----------------
-
-                st.markdown(f"""
-                <div class="judgment-container">
-
-                <div style="text-align:center">
-
-                <div style="font-family:'Playfair Display';font-size:2rem;color:#d4af37;">
-                ⚖️ SUPREME COURT OF INDIAN LAW
-                </div>
-
-                <div style="font-family:'JetBrains Mono';font-size:0.7rem;color:#94a3b8;">
-                AI LEGAL ANALYSIS • GENERATED JUDGMENT
-                </div>
-
-                </div>
-
-                <br>
-
-                <b>Case:</b> State vs {accused} <br>
-                <b>Date:</b> {date.today().strftime("%d %B %Y")} <br>
-                <b>Alleged Crime:</b> {crimes}
-
-                </div>
-                """, unsafe_allow_html=True)
-
-                # ---------------- JUDGMENT ----------------
-
-                st.markdown(result["judgment"])
-
-                # ---------------- SOURCES ----------------
-
-                with st.expander("📜 Retrieved Legal Sections"):
-
-                    for src in result.get("sources", []):
-
-                        st.markdown(f"""
-                        <div style="background:#020617;padding:1rem;margin-bottom:0.7rem;border:1px solid #d4af3744;border-radius:5px;">
-
-                        <span class="source-chip">{src['source']}</span>
-
-                        <div style="font-size:0.75rem;color:#94a3b8;margin-top:4px;">
-                        relevance score: {src['relevance']:.3f}
-                        </div>
-
-                        <div style="margin-top:0.6rem;">
-                        {src['text'][:500]}...
-                        </div>
-
-                        </div>
-                        """, unsafe_allow_html=True)
+                # SAVE to session_state so result persists across reruns
+                st.session_state["result"]        = result
+                st.session_state["accused_final"] = accused
+                st.session_state["crimes_final"]  = crimes
 
             except Exception as e:
 
                 st.error(f"Error: {str(e)}")
+
+# DISPLAY — outside if analyze_btn so it survives reconnects
+if "result" in st.session_state:
+
+    result  = st.session_state["result"]
+    accused = st.session_state["accused_final"]
+    crimes  = st.session_state["crimes_final"]
+
+    # ---------------- COURT HEADER ----------------
+
+    st.markdown(f"""
+    <div class="judgment-container">
+
+    <div style="text-align:center">
+
+    <div style="font-family:'Playfair Display';font-size:2rem;color:#d4af37;">
+    ⚖️ SUPREME COURT OF INDIAN LAW
+    </div>
+
+    <div style="font-family:'JetBrains Mono';font-size:0.7rem;color:#94a3b8;">
+    AI LEGAL ANALYSIS • GENERATED JUDGMENT
+    </div>
+
+    </div>
+
+    <br>
+
+    <b>Case:</b> State vs {accused} <br>
+    <b>Date:</b> {date.today().strftime("%d %B %Y")} <br>
+    <b>Alleged Crime:</b> {crimes}
+
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ---------------- JUDGMENT ----------------
+
+    st.markdown(result["judgment"])
+
+    # ---------------- SOURCES ----------------
+
+    with st.expander("Retrieved Legal Sections"):
+
+        for src in result.get("sources", []):
+
+            st.markdown(f"""
+            <div style="background:#020617;padding:1rem;margin-bottom:0.7rem;border:1px solid #d4af3744;border-radius:5px;">
+
+            <span class="source-chip">{src['source']}</span>
+
+            <div style="font-size:0.75rem;color:#94a3b8;margin-top:4px;">
+            relevance score: {src['relevance']:.3f}
+            </div>
+
+            <div style="margin-top:0.6rem;">
+            {src['text'][:500]}...
+            </div>
+
+            </div>
+            """, unsafe_allow_html=True)
 
 # ---------------- FOOTER ----------------
 
