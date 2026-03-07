@@ -1,5 +1,3 @@
-"""
-
 import streamlit as st
 from datetime import date
 import sys
@@ -7,7 +5,8 @@ import os
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-# Page Config
+# ---------------- PAGE CONFIG ----------------
+
 st.set_page_config(
     page_title="Indian Legal AI Advisor",
     page_icon="⚖️",
@@ -19,106 +18,130 @@ st.set_page_config(
 
 st.markdown("""
 <style>
+
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Serif+4:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
-.stApp { background: #0a0e1a; font-family: 'Source Serif 4', serif; }
+/* MAIN BACKGROUND */
 
-.stApp, .stApp p, .stApp div, .stApp span { color: #f0e6d3 !important; }
-
-[data-testid="stSidebar"] {
-background: #060912;
-border-right: 1px solid #c9a84c33;
-}
-.stMarkdown pre {
-    background: #0c1120 !important;
-    border: 1px solid #c9a84c33 !important;
-    border-radius: 4px !important;
-    padding: 1rem !important;
+.stApp{
+background: radial-gradient(circle at top,#0f172a,#020617);
+font-family:'Source Serif 4',serif;
+color:#f1f5f9;
 }
 
-.stMarkdown pre code {
-    color: #f0e6d3 !important;
-    background: transparent !important;
+/* SIDEBAR */
+
+[data-testid="stSidebar"]{
+background:#020617;
+border-right:1px solid #c9a84c33;
 }
 
-code {
-    background: #1a2035 !important;
-    color: #98d8a8 !important;
-    padding: 0.2rem 0.4rem !important;
-    border-radius: 3px !important;
+[data-testid="stSidebar"] *{
+color:#f8fafc;
 }
-.hero-header {
+
+/* HERO HEADER */
+
+.hero-header{
 text-align:center;
-padding:2.5rem 0 1.5rem;
+padding:3rem 0 2rem;
 border-bottom:1px solid #c9a84c44;
 margin-bottom:2rem;
 }
 
 .hero-title{
 font-family:'Playfair Display',serif;
-font-size:3rem;
+font-size:3.2rem;
 font-weight:900;
-color:#c9a84c;
+color:#d4af37;
 }
 
 .hero-subtitle{
 font-style:italic;
-color:#aabbcc;
+color:#cbd5f5;
+margin-top:0.4rem;
 }
 
 .hero-badge{
 display:inline-block;
 margin-top:1rem;
-padding:0.3rem 1.2rem;
-border:1px solid #c9a84c66;
+padding:0.35rem 1.3rem;
+border:1px solid #d4af3780;
 font-family:'JetBrains Mono';
 font-size:0.7rem;
-color:#c9a84c;
+color:#d4af37;
 }
+
+/* INPUT */
 
 .input-label{
 font-family:'JetBrains Mono';
 font-size:0.72rem;
-letter-spacing:0.12em;
+letter-spacing:0.14em;
 text-transform:uppercase;
-color:#c9a84c;
+color:#d4af37;
+margin-bottom:4px;
 }
 
-.stTextInput input, .stTextArea textarea{
-background:#060912 !important;
-border:1px solid #c9a84c44 !important;
-color:white !important;
+.stTextInput input,
+.stTextArea textarea{
+background:#020617 !important;
+border:1px solid #d4af3744 !important;
+color:#f8fafc !important;
+border-radius:6px;
 }
 
-.stButton > button{
+/* BUTTON */
+
+.stButton>button{
 width:100%;
-background:linear-gradient(135deg,#c9a84c,#a8832a);
-color:#0a0e1a;
+background:linear-gradient(135deg,#d4af37,#a67c00);
+color:#020617;
 font-weight:700;
 font-size:1.05rem;
 border:none;
-padding:0.75rem;
+padding:0.8rem;
+border-radius:6px;
 }
+
+/* JUDGMENT BLOCK */
 
 .judgment-container{
-background:#0c1120;
-border:1px solid #c9a84c33;
-border-top:3px solid #c9a84c;
+background:#020617;
+border:1px solid #d4af3744;
+border-top:4px solid #d4af37;
 padding:2rem;
-margin-top:1.5rem;
+margin-top:2rem;
+border-radius:6px;
 }
 
+/* SOURCE CHIP */
+
 .source-chip{
-background:#1a2035;
-border:1px solid #c9a84c33;
-padding:0.2rem 0.7rem;
+background:#020617;
+border:1px solid #d4af3744;
+padding:0.2rem 0.8rem;
 font-family:'JetBrains Mono';
 font-size:0.68rem;
-color:#c9a84c;
+color:#d4af37;
+border-radius:4px;
 }
+
+/* CODE BLOCKS */
+
+.stMarkdown pre{
+background:#020617 !important;
+border:1px solid #d4af3744 !important;
+border-radius:6px !important;
+padding:1rem !important;
+}
+
+/* REMOVE STREAMLIT DEFAULT UI */
 
 #MainMenu{visibility:hidden;}
 footer{visibility:hidden;}
+header{visibility:hidden;}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -129,7 +152,7 @@ with st.sidebar:
     st.markdown("""
     <div style="text-align:center">
     <div style="font-size:3rem;">⚖️</div>
-    <div style="font-size:1.2rem;color:#c9a84c;font-weight:700">
+    <div style="font-size:1.2rem;color:#d4af37;font-weight:700">
     Legal RAG System
     </div>
     </div>
@@ -137,12 +160,12 @@ with st.sidebar:
 
     st.markdown("---")
 
-    st.markdown("### 📚 Ingested Documents")
+    st.markdown("### 📚 Ingested Legal Documents")
 
     docs = [
         "Indian Constitution 2023",
-        "BNS 2023",
-        "IPC",
+        "Bharatiya Nyaya Sanhita (BNS) 2023",
+        "Indian Penal Code (IPC)",
         "POCSO Act",
         "CrPC"
     ]
@@ -153,10 +176,10 @@ with st.sidebar:
     st.markdown("---")
 
     st.markdown(f"""
-    Today: {date.today().strftime("%d %B %Y")}
+    **Today:** {date.today().strftime("%d %B %Y")}
 
-    BNS 2023 ACTIVE  
-    IPC REPEALED
+    **BNS 2023:** ACTIVE  
+    **IPC:** REPEALED
     """)
 
 # ---------------- HERO ----------------
@@ -208,7 +231,8 @@ with col2:
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# Analyze button
+# ---------------- BUTTON ----------------
+
 _, btn_col, _ = st.columns([1,2,1])
 
 with btn_col:
@@ -229,7 +253,7 @@ if analyze_btn:
 
     else:
 
-        with st.spinner("Analyzing case using Indian law..."):
+        with st.spinner("⚖️ Consulting Indian law and legal precedents..."):
 
             try:
 
@@ -237,18 +261,18 @@ if analyze_btn:
 
                 result = analyze_case(accused=accused, crimes=crimes)
 
-                # Court Header
+                # ---------------- COURT HEADER ----------------
 
                 st.markdown(f"""
                 <div class="judgment-container">
 
                 <div style="text-align:center">
 
-                <div style="font-family:'Playfair Display';font-size:1.8rem;color:#c9a84c;">
-                ⚖️ IN THE COURT OF INDIAN LAW
+                <div style="font-family:'Playfair Display';font-size:2rem;color:#d4af37;">
+                ⚖️ SUPREME COURT OF INDIAN LAW
                 </div>
 
-                <div style="font-family:'JetBrains Mono';font-size:0.7rem;color:#889;">
+                <div style="font-family:'JetBrains Mono';font-size:0.7rem;color:#94a3b8;">
                 AI LEGAL ANALYSIS • GENERATED JUDGMENT
                 </div>
 
@@ -256,30 +280,36 @@ if analyze_btn:
 
                 <br>
 
-                <b>Case Title:</b> State vs {accused} <br>
+                <b>Case:</b> State vs {accused} <br>
                 <b>Date:</b> {date.today().strftime("%d %B %Y")} <br>
-                <b>Crime Alleged:</b> {crimes}
+                <b>Alleged Crime:</b> {crimes}
 
                 </div>
                 """, unsafe_allow_html=True)
 
+                # ---------------- JUDGMENT ----------------
+
                 st.markdown(result["judgment"])
 
-                # Sources
+                # ---------------- SOURCES ----------------
 
-                with st.expander("View Retrieved Legal Sections"):
+                with st.expander("📜 Retrieved Legal Sections"):
 
                     for src in result.get("sources", []):
 
                         st.markdown(f"""
-                        <div style="background:#0c1120;padding:1rem;margin-bottom:0.6rem;">
+                        <div style="background:#020617;padding:1rem;margin-bottom:0.7rem;border:1px solid #d4af3744;border-radius:5px;">
+
                         <span class="source-chip">{src['source']}</span>
 
-                        relevance: {src['relevance']:.3f}
+                        <div style="font-size:0.75rem;color:#94a3b8;margin-top:4px;">
+                        relevance score: {src['relevance']:.3f}
+                        </div>
 
-                        <div style="margin-top:0.5rem;">
+                        <div style="margin-top:0.6rem;">
                         {src['text'][:500]}...
                         </div>
+
                         </div>
                         """, unsafe_allow_html=True)
 
@@ -292,8 +322,7 @@ if analyze_btn:
 st.markdown("---")
 
 st.markdown("""
-<div style="text-align:center;font-size:0.65rem;color:#334;">
-BUILT WITH: CHROMA · BAAI/bge-small · GROQ LLAMA3 · STREAMLIT
+<div style="text-align:center;font-size:0.65rem;color:#64748b;">
+BUILT WITH: CHROMA · BGE EMBEDDINGS · GROQ LLAMA3 · STREAMLIT
 </div>
 """, unsafe_allow_html=True)
-
