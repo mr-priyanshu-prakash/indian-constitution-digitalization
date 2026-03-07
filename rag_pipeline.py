@@ -152,17 +152,16 @@ def build_prompt(accused: str, crimes: str, chunks: list) -> str:
 
         combined = " ".join(texts)[:1500]
 
-        context_parts.append(
-            f"### [{source}]\n{combined}"
-        )
+        context_parts.append(f"### [{source}]\n{combined}")
 
     context = "\n\n".join(context_parts)
 
-    return f"""You are a senior Indian legal expert and judge with complete knowledge of:
+    prompt = f"""
+You are a senior Indian legal expert and judge with complete knowledge of:
 
-- BNS 2023 (Bharatiya Nyaya Sanhita) — NEW Indian penal code effective 2024
-- IPC (Indian Penal Code) — OLD code, repealed but used as reference
-- POCSO Act 2012 — Protection of Children from Sexual Offences
+- BNS 2023 (Bharatiya Nyaya Sanhita)
+- IPC (Indian Penal Code)
+- POCSO Act 2012
 - CrPC (Code of Criminal Procedure)
 - Constitution of India
 
@@ -170,32 +169,42 @@ TODAY'S DATE: {today}
 
 IMPORTANT:
 BNS 2023 applies for crimes committed today (IPC repealed July 2024).
-POCSO is mandatory for ALL crimes against minors (under 18).
+POCSO applies for crimes involving minors.
 
 --- RETRIEVED LEGAL CONTEXT ---
 {context}
 --- END CONTEXT ---
 
-CASE:
+CASE DETAILS
 Accused: {accused}
 Crimes: {crimes}
 
 Respond EXACTLY in this format:
 
-## Case: State vs. {accused}
+## Case: State vs {accused}
 
-**Crimes Committed:** {crimes}
-**Date of Crime:** {today}
-**Applicable Law:** BNS 2023 + POCSO Act (if minor involved)
+Crimes Committed: {crimes}
+Date of Crime: {today}
 
----
-
-## Charges & Sections
+Charges & Sections
 
 | Law | Section | Offence | Punishment |
-|---|---|---|---|
-[fill all applicable rows]
+|-----|--------|--------|------------|
+Fill applicable rows
 
----
+Final Judgment Summary
 
-## Final Judgment Summary
+ACCUSED         : {accused}
+CHARGES         : list all charges
+MINIMUM SENTENCE: minimum punishment
+MAXIMUM SENTENCE: maximum punishment
+LIKELY SENTENCE : realistic sentence
+TRIED IN        : court name
+FINE            : fine details
+
+Key Legal Points
+
+List 5 important legal observations.
+"""
+
+    return prompt
