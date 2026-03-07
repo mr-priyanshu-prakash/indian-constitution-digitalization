@@ -221,7 +221,7 @@ with btn_col:
 if analyze_btn:
 
     accused = st.session_state.get("accused", accused_input).strip()
-    crimes = st.session_state.get("crimes", crimes_input).strip()
+    crimes  = st.session_state.get("crimes",  crimes_input).strip()
 
     if not accused:
         st.warning("Please enter accused name")
@@ -239,55 +239,65 @@ if analyze_btn:
 
                 result = analyze_case(accused=accused, crimes=crimes)
 
-                # Court Header
-
-                st.markdown(f"""
-                <div class="judgment-container">
-
-                <div style="text-align:center">
-
-                <div style="font-family:'Playfair Display';font-size:1.8rem;color:#c9a84c;">
-                ⚖️ IN THE COURT OF INDIAN LAW
-                </div>
-
-                <div style="font-family:'JetBrains Mono';font-size:0.7rem;color:#889;">
-                AI LEGAL ANALYSIS • GENERATED JUDGMENT
-                </div>
-
-                </div>
-
-                <br>
-
-                <b>Case Title:</b> State vs {accused} <br>
-                <b>Date:</b> {date.today().strftime("%d %B %Y")} <br>
-                <b>Crime Alleged:</b> {crimes}
-
-                </div>
-                """, unsafe_allow_html=True)
-
-                st.markdown(result["judgment"])
-
-                # Sources
-
-                with st.expander("View Retrieved Legal Sections"):
-
-                    for src in result.get("sources", []):
-
-                        st.markdown(f"""
-                        <div style="background:#0c1120;padding:1rem;margin-bottom:0.6rem;">
-                        <span class="source-chip">{src['source']}</span>
-
-                        relevance: {src['relevance']:.3f}
-
-                        <div style="margin-top:0.5rem;">
-                        {src['text'][:500]}...
-                        </div>
-                        </div>
-                        """, unsafe_allow_html=True)
+                # ✅ Save result to session_state so it persists across reruns
+                st.session_state["result"]        = result
+                st.session_state["accused_final"] = accused
+                st.session_state["crimes_final"]  = crimes
 
             except Exception as e:
 
                 st.error(f"Error: {str(e)}")
+
+# ✅ Display is now OUTSIDE if analyze_btn — survives all reruns
+if "result" in st.session_state:
+
+    result  = st.session_state["result"]
+    accused = st.session_state["accused_final"]
+    crimes  = st.session_state["crimes_final"]
+
+    # Court Header
+    st.markdown(f"""
+    <div class="judgment-container">
+
+    <div style="text-align:center">
+
+    <div style="font-family:'Playfair Display';font-size:1.8rem;color:#c9a84c;">
+    ⚖️ IN THE COURT OF INDIAN LAW
+    </div>
+
+    <div style="font-family:'JetBrains Mono';font-size:0.7rem;color:#889;">
+    AI LEGAL ANALYSIS • GENERATED JUDGMENT
+    </div>
+
+    </div>
+
+    <br>
+
+    <b>Case Title:</b> State vs {accused} <br>
+    <b>Date:</b> {date.today().strftime("%d %B %Y")} <br>
+    <b>Crime Alleged:</b> {crimes}
+
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown(result["judgment"])
+
+    # Sources
+    with st.expander("View Retrieved Legal Sections"):
+
+        for src in result.get("sources", []):
+
+            st.markdown(f"""
+            <div style="background:#0c1120;padding:1rem;margin-bottom:0.6rem;">
+            <span class="source-chip">{src['source']}</span>
+
+            relevance: {src['relevance']:.3f}
+
+            <div style="margin-top:0.5rem;">
+            {src['text'][:500]}...
+            </div>
+            </div>
+            """, unsafe_allow_html=True)
 
 # ---------------- FOOTER ----------------
 
