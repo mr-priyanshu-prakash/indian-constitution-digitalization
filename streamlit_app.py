@@ -17,7 +17,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ---------------- CSS ----------------
+# CSS 
 
 st.markdown("""
 <style>
@@ -124,7 +124,7 @@ footer{visibility:hidden;}
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- SIDEBAR ----------------
+#  SIDEBAR 
 
 with st.sidebar:
 
@@ -161,7 +161,7 @@ with st.sidebar:
     IPC REPEALED
     """)
 
-# ---------------- HERO ----------------
+# HERO 
 
 st.markdown("""
 <div class="hero-header">
@@ -181,7 +181,7 @@ RAG • Retrieval Augmented Generation • Legal Intelligence
 </div>
 """, unsafe_allow_html=True)
 
-# ---------------- INPUT ----------------
+# INPUT 
 
 col1, col2 = st.columns([1,2])
 
@@ -216,7 +216,7 @@ _, btn_col, _ = st.columns([1,2,1])
 with btn_col:
     analyze_btn = st.button("Analyze Case Under Indian Law")
 
-# ---------------- ANALYSIS ----------------
+#  ANALYSIS 
 
 if analyze_btn:
 
@@ -239,7 +239,7 @@ if analyze_btn:
 
                 result = analyze_case(accused=accused, crimes=crimes)
 
-                # ✅ Save result to session_state so it persists across reruns
+                # Save result to session_state so it persists across reruns
                 st.session_state["result"]        = result
                 st.session_state["accused_final"] = accused
                 st.session_state["crimes_final"]  = crimes
@@ -248,7 +248,7 @@ if analyze_btn:
 
                 st.error(f"Error: {str(e)}")
 
-# ✅ Display is now OUTSIDE if analyze_btn — survives all reruns
+#Display is now OUTSIDE if analyze_btn — survives all reruns
 if "result" in st.session_state:
 
     result  = st.session_state["result"]
@@ -299,7 +299,7 @@ if "result" in st.session_state:
             </div>
             """, unsafe_allow_html=True)
 
-# ---------------- FOOTER ----------------
+# FOOTER 
 
 st.markdown("---")
 
