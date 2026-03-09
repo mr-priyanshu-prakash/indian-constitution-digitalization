@@ -41,13 +41,11 @@ def _get_embedder():
     if _embedder is None:
         print(f"[RAG] Loading embedding model: {EMBEDDING_MODEL}")
 
-        # Force CPU device to avoid meta tensor issue
         _embedder = SentenceTransformer(
             EMBEDDING_MODEL,
             device="cpu"
         )
 
-        # Ensure model is properly moved off meta device
         _embedder._first_module().to(torch.device("cpu"))
 
         print("[RAG] Embedder ready (CPU)")
@@ -55,24 +53,27 @@ def _get_embedder():
     return _embedder
 
 
-# ---------------- CHROMA ----------------
+# ---------------- CHROMA CLOUD ----------------
 
 def _get_collection():
     global _collection
 
     if _collection is None:
 
-        print("[RAG] Using local Chroma database...")
+        print("[RAG] Connecting to Chroma Cloud...")
 
-        client = chromadb.PersistentClient(
-            path="./chroma_db"
+        #use Chroma Cloud, not local PersistentClient
+        client = chromadb.HttpClient(
+            host=CHROMA_HOST,
+            ssl=True,
+            headers={"x-chroma-token": CHROMA_API_KEY},
+            tenant=CHROMA_TENANT,
+            database=CHROMA_DATABASE,
         )
 
-        _collection = client.get_or_create_collection(
-            name=COLLECTION_NAME
-        )
+        _collection = client.get_collection(name=COLLECTION_NAME)
 
-        print(f"[RAG] Chroma ready — collection: {COLLECTION_NAME}")
+        print(f"[RAG] Chroma Cloud ready — collection: {COLLECTION_NAME}")
 
     return _collection
 
