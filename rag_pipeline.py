@@ -62,11 +62,9 @@ def _get_collection():
 
         print("[RAG] Connecting to Chroma Cloud...")
 
-        #use Chroma Cloud, not local PersistentClient
-        client = chromadb.HttpClient(
-            host=CHROMA_HOST,
-            ssl=True,
-            headers={"x-chroma-token": CHROMA_API_KEY},
+        # Use CloudClient rather than HttpClient for chromadb 0.5.0
+        client = chromadb.CloudClient(
+            api_key=CHROMA_API_KEY,
             tenant=CHROMA_TENANT,
             database=CHROMA_DATABASE,
         )
@@ -76,7 +74,6 @@ def _get_collection():
         print(f"[RAG] Chroma Cloud ready — collection: {COLLECTION_NAME}")
 
     return _collection
-
 
 # ---------------- GROQ ----------------
 
