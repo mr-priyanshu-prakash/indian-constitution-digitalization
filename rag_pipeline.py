@@ -54,7 +54,6 @@ def _get_embedder():
 
 
 # ---------------- CHROMA CLOUD ----------------
-
 def _get_collection():
     global _collection
 
@@ -62,11 +61,12 @@ def _get_collection():
 
         print("[RAG] Connecting to Chroma Cloud...")
 
-        # Use CloudClient rather than HttpClient for chromadb 0.5.0
-        client = chromadb.CloudClient(
-            api_key=CHROMA_API_KEY,
+        client = chromadb.HttpClient(
+            ssl=True,
+            host=CHROMA_HOST,
             tenant=CHROMA_TENANT,
             database=CHROMA_DATABASE,
+            headers={"x-chroma-token": CHROMA_API_KEY}
         )
 
         _collection = client.get_collection(name=COLLECTION_NAME)
@@ -74,7 +74,6 @@ def _get_collection():
         print(f"[RAG] Chroma Cloud ready — collection: {COLLECTION_NAME}")
 
     return _collection
-
 # ---------------- GROQ ----------------
 
 def _get_groq():
