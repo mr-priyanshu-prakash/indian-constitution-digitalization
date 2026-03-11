@@ -3,7 +3,7 @@ import sys
 from datetime import date
 from dotenv import load_dotenv
 import torch
-import chromadb
+#import chromadb
 from groq import Groq
 from sentence_transformers import SentenceTransformer
 import request
