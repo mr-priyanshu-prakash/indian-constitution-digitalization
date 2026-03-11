@@ -4,12 +4,10 @@ from datetime import date
 from dotenv import load_dotenv
 import torch
 import chromadb
-from chromadb import Settings
-load_dotenv()
-
-import chromadb
 from groq import Groq
 from sentence_transformers import SentenceTransformer
+
+load_dotenv()
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -26,7 +24,6 @@ from config import (
     GROQ_MAX_TOKENS,
     TOP_K
 )
-
 # ---------------- SINGLETONS ----------------
 
 _embedder = None
@@ -64,7 +61,6 @@ def _get_collection():
 
         client = chromadb.HttpClient(
             host=CHROMA_HOST,
-            port=8000,
             ssl=True,
             headers={"x-chroma-token": CHROMA_API_KEY},
             settings=chromadb.Settings(
