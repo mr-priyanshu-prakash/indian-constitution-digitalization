@@ -80,17 +80,16 @@ def _query_chroma(query_embedding: list, top_k: int) -> dict:
         "Content-Type": "application/json"
     }
 
-    base_url = f"https://{CHROMA_HOST}/api/v1"
+    base_url = f"https://{CHROMA_HOST}/api/v2"
 
+    # Get collection ID
     col_resp = requests.get(
-        f"{base_url}/collections/{COLLECTION_NAME}",
-        headers=headers,
-        params={"tenant": CHROMA_TENANT, "database": CHROMA_DATABASE}
+        f"{base_url}/tenants/{CHROMA_TENANT}/databases/{CHROMA_DATABASE}/collections/{COLLECTION_NAME}",
+        headers=headers
     )
 
-    # DEBUG — log the full response
-    print(f"[DEBUG] Status: {col_resp.status_code}")
-    print(f"[DEBUG] Response: {col_resp.text}")
+    print(f"[DEBUG] Collection status: {col_resp.status_code}")
+    print(f"[DEBUG] Collection response: {col_resp.text}")
 
     col_data = col_resp.json()
 
@@ -99,8 +98,9 @@ def _query_chroma(query_embedding: list, top_k: int) -> dict:
 
     collection_id = col_data["id"]
 
+    # Query
     query_resp = requests.post(
-        f"{base_url}/collections/{collection_id}/query",
+        f"{base_url}/tenants/{CHROMA_TENANT}/databases/{CHROMA_DATABASE}/collections/{collection_id}/query",
         headers=headers,
         json={
             "query_embeddings": [query_embedding],
