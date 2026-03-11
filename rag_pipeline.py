@@ -6,6 +6,7 @@ import torch
 import chromadb
 from groq import Groq
 from sentence_transformers import SentenceTransformer
+import request
 
 load_dotenv()
 
@@ -52,6 +53,7 @@ def _get_embedder():
 
 
 # ---------------- CHROMA CLOUD ----------------
+'''
 def _get_collection():
     global _collection
 
@@ -70,6 +72,38 @@ def _get_collection():
         print(f"[RAG] Chroma Cloud ready — collection: {COLLECTION_NAME}")
 
     return _collection
+'''
+def _query_chroma(query_embedding: list, top_k: int) -> dict:
+
+    # Step 1 — Get collection ID
+    headers = {
+        "x-chroma-token": CHROMA_API_KEY,
+        "Content-Type": "application/json"
+    }
+
+    base_url = f"https://{CHROMA_HOST}/api/v1"
+
+    # Get collection
+    col_resp = requests.get(
+        f"{base_url}/collections/{COLLECTION_NAME}",
+        headers=headers,
+        params={"tenant": CHROMA_TENANT, "database": CHROMA_DATABASE}
+    )
+
+    collection_id = col_resp.json()["id"]
+
+    # Step 2 — Query
+    query_resp = requests.post(
+        f"{base_url}/collections/{collection_id}/query",
+        headers=headers,
+        json={
+            "query_embeddings": [query_embedding],
+            "n_results": top_k,
+            "include": ["documents", "metadatas", "distances"]
+        }
+    )
+
+    return query_resp.json()
 # ---------------- GROQ ----------------
 
 def _get_groq():
@@ -91,7 +125,7 @@ def _get_groq():
 
 
 # ---------------- RETRIEVAL ----------------
-
+'''
 def retrieve_chunks(query: str, top_k: int = TOP_K) -> list:
 
     embedder = _get_embedder()
@@ -127,7 +161,35 @@ def retrieve_chunks(query: str, top_k: int = TOP_K) -> list:
 
     return chunks
 
+'''
+def retrieve_chunks(query: str, top_k: int = TOP_K) -> list:
 
+    embedder = _get_embedder()
+
+    prefixed_query = f"Represent this sentence for searching relevant passages: {query}"
+
+    q_emb = embedder.encode(
+        [prefixed_query],
+        convert_to_numpy=True,
+        normalize_embeddings=True
+    ).tolist()[0]  # single vector
+
+    results = _query_chroma(q_emb, top_k)
+
+    chunks = []
+
+    for doc, meta, dist in zip(
+        results["documents"][0],
+        results["metadatas"][0],
+        results["distances"][0]
+    ):
+        chunks.append({
+            "text": doc,
+            "source": meta.get("source", "Unknown"),
+            "relevance": round(1 - dist, 3)
+        })
+
+    return chunks
 # ---------------- PROMPT ----------------
 
 def build_prompt(accused: str, crimes: str, chunks: list) -> str:
