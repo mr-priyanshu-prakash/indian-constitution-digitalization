@@ -59,12 +59,10 @@ def _get_collection():
 
         print("[RAG] Connecting to Chroma Cloud...")
 
-        client = chromadb.HttpClient(
-            host=CHROMA_HOST,
-            ssl=True,
-            headers={"x-chroma-token": CHROMA_API_KEY},
+        client = chromadb.CloudClient(
             tenant=CHROMA_TENANT,
-            database=CHROMA_DATABASE
+            database=CHROMA_DATABASE,
+            api_key=CHROMA_API_KEY
         )
 
         _collection = client.get_collection(name=COLLECTION_NAME)
