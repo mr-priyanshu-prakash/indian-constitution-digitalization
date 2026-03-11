@@ -75,7 +75,6 @@ def _get_collection():
 '''
 def _query_chroma(query_embedding: list, top_k: int) -> dict:
 
-    # Step 1 — Get collection ID
     headers = {
         "x-chroma-token": CHROMA_API_KEY,
         "Content-Type": "application/json"
@@ -83,16 +82,23 @@ def _query_chroma(query_embedding: list, top_k: int) -> dict:
 
     base_url = f"https://{CHROMA_HOST}/api/v1"
 
-    # Get collection
     col_resp = requests.get(
         f"{base_url}/collections/{COLLECTION_NAME}",
         headers=headers,
         params={"tenant": CHROMA_TENANT, "database": CHROMA_DATABASE}
     )
 
-    collection_id = col_resp.json()["id"]
+    # DEBUG — log the full response
+    print(f"[DEBUG] Status: {col_resp.status_code}")
+    print(f"[DEBUG] Response: {col_resp.text}")
 
-    # Step 2 — Query
+    col_data = col_resp.json()
+
+    if "id" not in col_data:
+        raise ValueError(f"Chroma collection error: {col_data}")
+
+    collection_id = col_data["id"]
+
     query_resp = requests.post(
         f"{base_url}/collections/{collection_id}/query",
         headers=headers,
