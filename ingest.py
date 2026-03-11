@@ -66,12 +66,10 @@ def ingest():
 
     # Connect to Chroma Cloud
     print(f"\nConnecting to Chroma Cloud...")
-    client = chromadb.HttpClient(
-        host=CHROMA_HOST,
-        ssl=True,
-        headers={"x-chroma-token": CHROMA_API_KEY},
-        tenant=CHROMA_TENANT,
-        database=CHROMA_DATABASE,
+    client = chromadb.CloudClient(
+    tenant=CHROMA_TENANT,
+    database=CHROMA_DATABASE,
+    api_key=CHROMA_API_KEY
     )
     print("Connected to Chroma Cloud.")
 
