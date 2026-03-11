@@ -63,11 +63,8 @@ def _get_collection():
             host=CHROMA_HOST,
             ssl=True,
             headers={"x-chroma-token": CHROMA_API_KEY},
-            settings=chromadb.Settings(
-                chroma_client_auth_provider="chromadb.auth.token_authn.TokenAuthClientProvider",
-                chroma_client_auth_credentials=CHROMA_API_KEY,
-                anonymized_telemetry=False
-            )
+            tenant=CHROMA_TENANT,
+            database=CHROMA_DATABASE
         )
 
         _collection = client.get_collection(name=COLLECTION_NAME)
