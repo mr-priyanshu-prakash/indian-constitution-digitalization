@@ -62,8 +62,8 @@ def _get_collection():
         print("[RAG] Connecting to Chroma Cloud...")
 
         client = chromadb.HttpClient(
-            ssl=True,
             host=CHROMA_HOST,
+            ssl=True,
             tenant=CHROMA_TENANT,
             database=CHROMA_DATABASE,
             headers={"x-chroma-token": CHROMA_API_KEY}
