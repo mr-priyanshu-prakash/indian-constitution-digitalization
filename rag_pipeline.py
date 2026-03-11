@@ -6,7 +6,7 @@ import torch
 #import chromadb
 from groq import Groq
 from sentence_transformers import SentenceTransformer
-import request
+import requests
 
 load_dotenv()
 
