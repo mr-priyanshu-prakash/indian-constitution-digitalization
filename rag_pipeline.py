@@ -3,7 +3,8 @@ import sys
 from datetime import date
 from dotenv import load_dotenv
 import torch
-
+import chromadb
+from chromadb import Settings
 load_dotenv()
 
 import chromadb
@@ -63,10 +64,14 @@ def _get_collection():
 
         client = chromadb.HttpClient(
             host=CHROMA_HOST,
+            port=8000,
             ssl=True,
-            tenant=CHROMA_TENANT,
-            database=CHROMA_DATABASE,
-            headers={"x-chroma-token": CHROMA_API_KEY}
+            headers={"x-chroma-token": CHROMA_API_KEY},
+            settings=chromadb.Settings(
+                chroma_client_auth_provider="chromadb.auth.token_authn.TokenAuthClientProvider",
+                chroma_client_auth_credentials=CHROMA_API_KEY,
+                anonymized_telemetry=False
+            )
         )
 
         _collection = client.get_collection(name=COLLECTION_NAME)
