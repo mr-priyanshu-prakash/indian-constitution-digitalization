@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(
     page_title="Indian Legal AI Advisor",
-    page_icon="",
+    page_icon="⚖️",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -73,14 +73,18 @@ header[data-testid="stHeader"]{background:transparent;}
 .notice b{color:#331200;}
 
 /* cards */
-[data-testid="stVerticalBlockBorderWrapper"]{background:var(--card);border:1px solid var(--line) !important;
-  border-radius:10px;box-shadow:0 1px 6px rgba(11,28,48,.04);}
 .card-title{font-family:'Merriweather',serif;font-weight:700;font-size:1.1rem;color:var(--ink);}
 .card-sub{font-size:.8rem;color:var(--muted);margin:2px 0 .9rem;}
 .field-label{font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
   color:var(--ink);margin-bottom:.3rem;}
 
 /* inputs */
+:root{color-scheme:light;}
+.stTextInput div[data-baseweb="input"], .stTextInput div[data-baseweb="base-input"],
+.stTextArea div[data-baseweb="textarea"], .stTextArea div[data-baseweb="base-input"]{
+  background:var(--low) !important;border-radius:6px !important;}
+.stTextInput input:-webkit-autofill{
+  -webkit-box-shadow:0 0 0 1000px #eff4ff inset !important;-webkit-text-fill-color:#0b1c30 !important;}
 .stTextInput input, .stTextArea textarea{
   background:var(--low) !important;color:var(--ink) !important;
   border:1px solid var(--line) !important;border-radius:6px !important;
@@ -187,6 +191,7 @@ with st.container(border=True):
         accused_input = st.text_input(
             "Name of accused",
             placeholder="Enter accused name",
+            autocomplete="off",
             label_visibility="collapsed",
             key="accused",
         )
