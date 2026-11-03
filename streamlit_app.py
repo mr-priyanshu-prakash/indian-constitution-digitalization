@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(
-    page_title="Indian Legal AI Advisor",
+    page_title="VERDICT AI",
     page_icon="⚖️",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -134,8 +134,8 @@ with st.sidebar:
         """
 <div class="side-brand">
   <div class="logo">⚖</div>
-  <div><div class="brand-name">Legal RAG System</div>
-  <div class="brand-sub">Research Workstation</div></div>
+  <div><div class="brand-name">VERDICT AI</div>
+  <div class="brand-sub">PROTOTYPE</div></div>
 </div>
 """,
         unsafe_allow_html=True,
@@ -162,8 +162,8 @@ st.markdown(
     """
 <div class="topbar">
   <div>
-    <div class="brand-name">Indian Legal AI Advisor</div>
-    <div class="brand-sub">Statutory analysis &amp; legal research</div>
+    <div class="brand-name">VERDICT AI</div>
+    <div class="brand-sub">INDIAN LEGAL AI</div>
   </div>
   <div class="pill">BNS 2023 · IPC · CrPC · POCSO · Constitution of India</div>
 </div>
