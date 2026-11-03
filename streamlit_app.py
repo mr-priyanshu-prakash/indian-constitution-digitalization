@@ -1,339 +1,286 @@
-import streamlit as st
-from datetime import date
-import sys
+import html
 import os
+import sys
+from datetime import date
+
+import streamlit as st
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # ---------------- PAGE CONFIG ----------------
-
 st.set_page_config(
     page_title="Indian Legal AI Advisor",
-    page_icon="⚖️",
+    page_icon="",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
-# ---------------- CSS ----------------
+DOCS = [
+    "Indian Constitution 2023",
+    "Bharatiya Nyaya Sanhita (BNS) 2023",
+    "Indian Penal Code (IPC) 1860",
+    "POCSO Act 2012",
+    "Code of Criminal Procedure (CrPC)",
+]
 
-st.markdown("""
+# ---------------- STYLES ----------------
+st.markdown(
+    """
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Serif+4:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap');
-
-/* MAIN BACKGROUND */
-
-.stApp{
-background: radial-gradient(circle at top,#0f172a,#020617);
-font-family:'Source Serif 4',serif;
-color:#f1f5f9;
+:root{
+  --surface:#f8f9ff; --card:#ffffff; --low:#eff4ff; --mid:#e5eeff;
+  --ink:#0b1c30; --muted:#45464d; --navy:#131b2e;
+  --accent:#9b4500; --accent-bg:#ffdbca; --line:#d9e2f3;
 }
 
-/* SIDEBAR */
+.stApp{background:var(--surface);color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif;}
+.block-container{max-width:1080px;padding-top:2.2rem;padding-bottom:3rem;}
+header[data-testid="stHeader"]{background:transparent;}
+#MainMenu, footer{visibility:hidden;}
 
-[data-testid="stSidebar"]{
-background:#020617;
-border-right:1px solid #c9a84c33;
-}
+/* sidebar */
+[data-testid="stSidebar"]{background:var(--card);border-right:1px solid var(--line);}
+[data-testid="stSidebar"] *{color:var(--ink);}
 
-[data-testid="stSidebar"] *{
-color:#f8fafc;
-}
+.side-brand{display:flex;align-items:center;gap:.7rem;padding:.4rem 0 1rem;}
+.logo{width:40px;height:40px;border-radius:6px;background:var(--navy);display:flex;
+  align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;}
+.logo, .logo *{color:#fff !important;}
+.brand-name{font-family:'Merriweather',serif;font-weight:700;font-size:1.02rem;line-height:1.25;}
+.brand-sub{font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted) !important;margin-top:2px;}
 
-/* HERO HEADER */
+.side-label{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted) !important;margin:1.2rem 0 .5rem;}
+.doc-item{display:flex;align-items:center;gap:.55rem;padding:.5rem .65rem;border-radius:6px;
+  background:var(--low);margin-bottom:.4rem;font-size:.84rem;}
+.doc-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+.status-row{display:flex;justify-content:space-between;font-size:.8rem;padding:.3rem 0;
+  border-bottom:1px solid var(--line);}
+.status-row span:last-child{font-weight:600;}
 
-.hero-header{
-text-align:center;
-padding:3rem 0 2rem;
-border-bottom:1px solid #c9a84c44;
-margin-bottom:2rem;
-}
+/* top bar */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+  padding-bottom:1.1rem;border-bottom:1px solid var(--line);margin-bottom:1.4rem;}
+.topbar .brand-name{font-size:1.5rem;}
+.topbar .pill{font-size:.72rem;font-weight:600;letter-spacing:.04em;padding:.35rem .8rem;border-radius:999px;
+  background:var(--accent-bg);color:#331200 !important;}
 
-.hero-title{
-font-family:'Playfair Display',serif;
-font-size:3.2rem;
-font-weight:900;
-color:#d4af37;
-}
+/* notice */
+.notice{background:var(--accent-bg);border-left:4px solid var(--accent);border-radius:6px;
+  padding:.8rem 1rem;font-size:.85rem;line-height:1.55;color:#331200;margin-bottom:1.3rem;}
+.notice b{color:#331200;}
 
-.hero-subtitle{
-font-style:italic;
-color:#cbd5f5;
-margin-top:0.4rem;
-}
+/* cards */
+[data-testid="stVerticalBlockBorderWrapper"]{background:var(--card);border:1px solid var(--line) !important;
+  border-radius:10px;box-shadow:0 1px 6px rgba(11,28,48,.04);}
+.card-title{font-family:'Merriweather',serif;font-weight:700;font-size:1.1rem;color:var(--ink);}
+.card-sub{font-size:.8rem;color:var(--muted);margin:2px 0 .9rem;}
+.field-label{font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--ink);margin-bottom:.3rem;}
 
-.hero-badge{
-display:inline-block;
-margin-top:1rem;
-padding:0.35rem 1.3rem;
-border:1px solid #d4af3780;
-font-family:'JetBrains Mono';
-font-size:0.7rem;
-color:#d4af37;
-}
+/* inputs */
+.stTextInput input, .stTextArea textarea{
+  background:var(--low) !important;color:var(--ink) !important;
+  border:1px solid var(--line) !important;border-radius:6px !important;
+  font-family:'Plus Jakarta Sans',sans-serif !important;}
+.stTextInput input:focus, .stTextArea textarea:focus{border-color:var(--navy) !important;box-shadow:none !important;}
+.stTextInput input::placeholder, .stTextArea textarea::placeholder{color:#76777d !important;}
 
-/* INPUT */
+/* button */
+.stButton>button{width:100%;background:var(--navy);border:none;border-radius:8px;padding:.7rem 1rem;
+  font-weight:600;font-size:.95rem;transition:background .15s;}
+.stButton>button, .stButton>button p{color:#fff !important;}
+.stButton>button:hover{background:#000;}
+.stButton>button:focus{box-shadow:none;outline:none;}
 
-.input-label{
-font-family:'JetBrains Mono';
-font-size:0.72rem;
-letter-spacing:0.14em;
-text-transform:uppercase;
-color:#d4af37;
-margin-bottom:4px;
-}
+/* result header */
+.case-head{display:flex;flex-wrap:wrap;gap:1.6rem;align-items:flex-start;justify-content:space-between;}
+.case-head .k{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+.case-head .v{font-size:.98rem;font-weight:600;margin-top:2px;overflow-wrap:anywhere;}
+.badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:.25rem .65rem;border-radius:4px;background:var(--mid);color:var(--ink);}
 
-.stTextInput input,
-.stTextArea textarea{
-background:#020617 !important;
-border:1px solid #d4af3744 !important;
-color:#f8fafc !important;
-border-radius:6px;
-}
+/* sources */
+.src{background:var(--low);border-radius:8px;padding:.85rem 1rem;margin-bottom:.6rem;}
+.src-top{display:flex;justify-content:space-between;gap:.6rem;flex-wrap:wrap;align-items:center;}
+.src-name{font-weight:600;font-size:.86rem;}
+.src-score{font-size:.72rem;font-weight:700;color:var(--accent);}
+.src-text{font-size:.84rem;line-height:1.6;color:var(--muted);margin-top:.45rem;}
 
-/* BUTTON */
+.disclaimer{font-size:.78rem;color:var(--muted);background:var(--low);border-radius:6px;
+  padding:.7rem 1rem;margin-top:1rem;line-height:1.55;}
+.footer{text-align:center;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;
+  color:#76777d;margin-top:2.2rem;padding-top:1rem;border-top:1px solid var(--line);}
 
-.stButton>button{
-width:100%;
-background:linear-gradient(135deg,#d4af37,#a67c00);
-color:#020617;
-font-weight:700;
-font-size:1.05rem;
-border:none;
-padding:0.8rem;
-border-radius:6px;
-}
-
-/* JUDGMENT BLOCK */
-
-.judgment-container{
-background:#020617;
-border:1px solid #d4af3744;
-border-top:4px solid #d4af37;
-padding:2rem;
-margin-top:2rem;
-border-radius:6px;
-}
-
-/* SOURCE CHIP */
-
-.source-chip{
-background:#020617;
-border:1px solid #d4af3744;
-padding:0.2rem 0.8rem;
-font-family:'JetBrains Mono';
-font-size:0.68rem;
-color:#d4af37;
-border-radius:4px;
-}
-
-/* CODE BLOCKS */
-
-.stMarkdown pre{
-background:#020617 !important;
-border:1px solid #d4af3744 !important;
-border-radius:6px !important;
-padding:1rem !important;
-}
-
-/* REMOVE STREAMLIT DEFAULT UI */
-
-#MainMenu{visibility:hidden;}
-footer{visibility:hidden;}
-header{visibility:hidden;}
-
+/* markdown inside the analysis card */
+[data-testid="stMarkdownContainer"] h1,[data-testid="stMarkdownContainer"] h2,
+[data-testid="stMarkdownContainer"] h3{font-family:'Merriweather',serif;color:var(--ink);}
+[data-testid="stMarkdownContainer"] p, [data-testid="stMarkdownContainer"] li{line-height:1.7;}
+[data-testid="stExpander"]{border:1px solid var(--line);border-radius:10px;background:var(--card);}
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # ---------------- SIDEBAR ----------------
-
 with st.sidebar:
-
-    st.markdown("""
-    <div style="text-align:center">
-    <div style="font-size:3rem;">⚖️</div>
-    <div style="font-size:1.2rem;color:#d4af37;font-weight:700">
-    Legal RAG System
-    </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("---")
-
-    st.markdown("### 📚 Ingested Legal Documents")
-
-    docs = [
-        "Indian Constitution 2023",
-        "Bharatiya Nyaya Sanhita (BNS) 2023",
-        "Indian Penal Code (IPC)",
-        "POCSO Act",
-        "CrPC"
-    ]
-
-    for d in docs:
-        st.markdown(f"• {d}")
-
-    st.markdown("---")
-
-    st.markdown(f"""
-    **Today:** {date.today().strftime("%d %B %Y")}
-
-    **BNS 2023:** ACTIVE  
-    **IPC:** REPEALED
-    """)
-
-# ---------------- HERO ----------------
-
-st.markdown("""
-<div class="hero-header">
-
-<div class="hero-title">
-Indian Legal AI Advisor
+    st.markdown(
+        """
+<div class="side-brand">
+  <div class="logo">⚖</div>
+  <div><div class="brand-name">Legal RAG System</div>
+  <div class="brand-sub">Research Workstation</div></div>
 </div>
-
-<div class="hero-subtitle">
-Powered by BNS 2023 · IPC · POCSO · CrPC · Constitution of India
-</div>
-
-<div class="hero-badge">
-RAG • Retrieval Augmented Generation • Legal Intelligence
-</div>
-
-</div>
-""", unsafe_allow_html=True)
-
-# ---------------- INPUT ----------------
-
-col1, col2 = st.columns([1,2])
-
-with col1:
-
-    st.markdown('<div class="input-label">Name of Accused</div>', unsafe_allow_html=True)
-
-    accused_input = st.text_input(
-        label="accused",
-        placeholder="Enter accused name",
-        label_visibility="collapsed",
-        key="accused"
+""",
+        unsafe_allow_html=True,
     )
 
-with col2:
-
-    st.markdown('<div class="input-label">Crimes Committed</div>', unsafe_allow_html=True)
-
-    crimes_input = st.text_area(
-        label="crimes",
-        placeholder="Describe the crime committed",
-        height=80,
-        label_visibility="collapsed",
-        key="crimes"
+    st.markdown('<div class="side-label">Ingested Legal Documents</div>', unsafe_allow_html=True)
+    st.markdown(
+        "".join(f'<div class="doc-item"><span class="doc-dot"></span>{html.escape(d)}</div>' for d in DOCS),
+        unsafe_allow_html=True,
     )
 
-st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown('<div class="side-label">Status</div>', unsafe_allow_html=True)
+    st.markdown(
+        f"""
+<div class="status-row"><span>Today</span><span>{date.today().strftime("%d %b %Y")}</span></div>
+<div class="status-row"><span>BNS 2023</span><span>In force</span></div>
+<div class="status-row"><span>IPC 1860</span><span>Repealed</span></div>
+""",
+        unsafe_allow_html=True,
+    )
 
-# ---------------- BUTTON ----------------
+# ---------------- HEADER ----------------
+st.markdown(
+    """
+<div class="topbar">
+  <div>
+    <div class="brand-name">Indian Legal AI Advisor</div>
+    <div class="brand-sub">Statutory analysis &amp; legal research</div>
+  </div>
+  <div class="pill">BNS 2023 · IPC · CrPC · POCSO · Constitution of India</div>
+</div>
 
-_, btn_col, _ = st.columns([1,2,1])
+<div class="notice">
+  <b>Transition note:</b> Offences committed on or after <b>1 July 2024</b> are governed by the
+  Bharatiya Nyaya Sanhita (BNS) 2023, which replaced the Indian Penal Code, 1860. IPC provisions
+  remain relevant for offences committed before that date.
+</div>
+""",
+    unsafe_allow_html=True,
+)
 
-with btn_col:
+# ---------------- INTAKE ----------------
+with st.container(border=True):
+    st.markdown(
+        '<div class="card-title">Case Intake</div>'
+        '<div class="card-sub">Enter the accused and the alleged offence to analyse.</div>',
+        unsafe_allow_html=True,
+    )
+
+    col1, col2 = st.columns([1, 2])
+    with col1:
+        st.markdown('<div class="field-label">Name of Accused</div>', unsafe_allow_html=True)
+        accused_input = st.text_input(
+            "Name of accused",
+            placeholder="Enter accused name",
+            label_visibility="collapsed",
+            key="accused",
+        )
+    with col2:
+        st.markdown('<div class="field-label">Crimes Committed</div>', unsafe_allow_html=True)
+        crimes_input = st.text_area(
+            "Crimes committed",
+            placeholder="Describe the alleged offence and relevant facts",
+            height=100,
+            label_visibility="collapsed",
+            key="crimes",
+        )
+
     analyze_btn = st.button("Analyze Case Under Indian Law")
 
 # ---------------- ANALYSIS ----------------
-
 if analyze_btn:
-
-    accused = st.session_state.get("accused", accused_input).strip()
-    crimes  = st.session_state.get("crimes",  crimes_input).strip()
+    accused = accused_input.strip()
+    crimes = crimes_input.strip()
 
     if not accused:
-        st.warning("Please enter accused name")
-
+        st.warning("Please enter the name of the accused.")
     elif not crimes:
-        st.warning("Please describe the crime")
-
+        st.warning("Please describe the alleged offence.")
     else:
-
-        with st.spinner("⚖️ Consulting Indian law and legal precedents..."):
-
+        with st.spinner("Consulting Indian law and legal precedents..."):
             try:
-
                 from rag_pipeline import analyze_case
 
                 result = analyze_case(accused=accused, crimes=crimes)
-
-                # SAVE to session_state so result persists across reruns
-                st.session_state["result"]        = result
+                st.session_state["result"] = result
                 st.session_state["accused_final"] = accused
-                st.session_state["crimes_final"]  = crimes
-
+                st.session_state["crimes_final"] = crimes
             except Exception as e:
+                st.error(f"Error: {e}")
 
-                st.error(f"Error: {str(e)}")
-
-# DISPLAY — outside if analyze_btn so it survives reconnects
+# ---------------- RESULT (survives reruns) ----------------
 if "result" in st.session_state:
-
-    result  = st.session_state["result"]
+    result = st.session_state["result"]
     accused = st.session_state["accused_final"]
-    crimes  = st.session_state["crimes_final"]
+    crimes = st.session_state["crimes_final"]
 
-    # ---------------- COURT HEADER ----------------
+    st.markdown("<div style='height:1.2rem'></div>", unsafe_allow_html=True)
 
-    st.markdown(f"""
-    <div class="judgment-container">
+    with st.container(border=True):
+        st.markdown(
+            f"""
+<div class="case-head">
+  <div><div class="k">Case</div><div class="v">State vs {html.escape(accused)}</div></div>
+  <div><div class="k">Date</div><div class="v">{date.today().strftime("%d %B %Y")}</div></div>
+  <div style="flex-basis:100%"><div class="k">Alleged offence</div>
+  <div class="v" style="font-weight:500">{html.escape(crimes)}</div></div>
+</div>
+""",
+            unsafe_allow_html=True,
+        )
 
-    <div style="text-align:center">
+    st.markdown("<div style='height:.8rem'></div>", unsafe_allow_html=True)
 
-    <div style="font-family:'Playfair Display';font-size:2rem;color:#d4af37;">
-    ⚖️ SUPREME COURT OF INDIAN LAW
-    </div>
+    with st.container(border=True):
+        st.markdown(
+            '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem">'
+            '<div class="card-title">Legal Analysis</div><span class="badge">AI generated</span></div>',
+            unsafe_allow_html=True,
+        )
+        st.markdown(result["judgment"])
 
-    <div style="font-family:'JetBrains Mono';font-size:0.7rem;color:#94a3b8;">
-    AI LEGAL ANALYSIS • GENERATED JUDGMENT
-    </div>
+    st.markdown("<div style='height:.8rem'></div>", unsafe_allow_html=True)
 
-    </div>
+    sources = result.get("sources", [])
+    with st.expander(f"Retrieved Legal Sections ({len(sources)})"):
+        for src in sources:
+            st.markdown(
+                f"""
+<div class="src">
+  <div class="src-top">
+    <span class="src-name">{html.escape(str(src.get("source", "")))}</span>
+    <span class="src-score">Relevance {float(src.get("relevance", 0)):.3f}</span>
+  </div>
+  <div class="src-text">{html.escape(str(src.get("text", ""))[:500])}…</div>
+</div>
+""",
+                unsafe_allow_html=True,
+            )
 
-    <br>
-
-    <b>Case:</b> State vs {accused} <br>
-    <b>Date:</b> {date.today().strftime("%d %B %Y")} <br>
-    <b>Alleged Crime:</b> {crimes}
-
-    </div>
-    """, unsafe_allow_html=True)
-
-    # ---------------- JUDGMENT ----------------
-
-    st.markdown(result["judgment"])
-
-    # ---------------- SOURCES ----------------
-
-    with st.expander("Retrieved Legal Sections"):
-
-        for src in result.get("sources", []):
-
-            st.markdown(f"""
-            <div style="background:#020617;padding:1rem;margin-bottom:0.7rem;border:1px solid #d4af3744;border-radius:5px;">
-
-            <span class="source-chip">{src['source']}</span>
-
-            <div style="font-size:0.75rem;color:#94a3b8;margin-top:4px;">
-            relevance score: {src['relevance']:.3f}
-            </div>
-
-            <div style="margin-top:0.6rem;">
-            {src['text'][:500]}...
-            </div>
-
-            </div>
-            """, unsafe_allow_html=True)
+    st.markdown(
+        '<div class="disclaimer"><b>Note:</b> This analysis is AI-generated to support legal research. '
+        "Verify all provisions and citations against official sources before relying on it. "
+        "It is not a substitute for advice from a qualified advocate.</div>",
+        unsafe_allow_html=True,
+    )
 
 # ---------------- FOOTER ----------------
-
-st.markdown("---")
-
-st.markdown("""
-<div style="text-align:center;font-size:0.65rem;color:#64748b;">
-BUILT WITH: CHROMA · BGE EMBEDDINGS · GROQ LLAMA3 · STREAMLIT
-</div>
-""", unsafe_allow_html=True)
+st.markdown(
+    '<div class="footer">Built with Chroma · BGE embeddings · Groq · Streamlit</div>',
+    unsafe_allow_html=True,
+)
