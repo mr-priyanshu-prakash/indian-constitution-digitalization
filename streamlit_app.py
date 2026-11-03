@@ -285,9 +285,9 @@ if "result" in st.session_state:
     )
 
 # ---------------- FOOTER ----------------
-'''
-st.markdown(
-    '<div class="footer">Built with Chroma · BGE embeddings · Groq · Streamlit</div>',
-    unsafe_allow_html=True,
-)
-'''
+
+#st.markdown(
+    #'<div class="footer">Built with Chroma · BGE embeddings · Groq · Streamlit</div>',
+    #unsafe_allow_html=True,
+#)
+
