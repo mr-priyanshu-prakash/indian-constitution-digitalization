@@ -11,7 +11,7 @@ def get_env(key, default=""):
 
 # Groq API
 GROQ_API_KEY    = get_env("GROQ_API_KEY")
-GROQ_MODEL      = "llama-3.3-70b-versatile"
+GROQ_MODEL      = "openai/gpt-oss-120b"
 GROQ_TEMP       = 0.1
 GROQ_MAX_TOKENS = 1500
 
