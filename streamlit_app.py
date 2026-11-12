@@ -9,8 +9,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(
-    page_title="VERDICT AI",
-    #page_icon="⚖️",
+    page_title="Indian Legal AI Advisor",
+    page_icon="⚖️",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -113,6 +113,12 @@ header[data-testid="stHeader"]{background:transparent;}
 .src-score{font-size:.72rem;font-weight:700;color:var(--accent);}
 .src-text{font-size:.84rem;line-height:1.6;color:var(--muted);margin-top:.45rem;}
 
+.badge.lock{background:var(--accent-bg);color:#331200;}
+.lock-box{display:flex;align-items:center;gap:.9rem;background:var(--low);border:1px dashed #b9c4d8;
+  border-radius:8px;padding:1rem 1.1rem;}
+.lock-icon{font-size:1.3rem;}
+.lock-title{font-weight:600;font-size:.92rem;color:var(--ink);}
+.lock-text{font-size:.84rem;color:var(--muted);margin-top:2px;line-height:1.5;}
 .disclaimer{font-size:.78rem;color:var(--muted);background:var(--low);border-radius:6px;
   padding:.7rem 1rem;margin-top:1rem;line-height:1.55;}
 .footer{text-align:center;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;
@@ -134,8 +140,8 @@ with st.sidebar:
         """
 <div class="side-brand">
   <div class="logo">⚖</div>
-  <div><div class="brand-name">VERDICT AI</div>
-  <div class="brand-sub">PROTOTYPE</div></div>
+  <div><div class="brand-name">Legal RAG System</div>
+  <div class="brand-sub">Research Workstation</div></div>
 </div>
 """,
         unsafe_allow_html=True,
@@ -162,8 +168,8 @@ st.markdown(
     """
 <div class="topbar">
   <div>
-    <div class="brand-name">VERDICT AI</div>
-    <div class="brand-sub">INDIAN LEGAL AI</div>
+    <div class="brand-name">Indian Legal AI Advisor</div>
+    <div class="brand-sub">Statutory analysis &amp; legal research</div>
   </div>
   <div class="pill">BNS 2023 · IPC · CrPC · POCSO · Constitution of India</div>
 </div>
@@ -277,6 +283,27 @@ if "result" in st.session_state:
                 unsafe_allow_html=True,
             )
 
+    # ---- Similar judgments (licensed feature - locked placeholder) ----
+    st.markdown("<div style='height:.8rem'></div>", unsafe_allow_html=True)
+    with st.container(border=True):
+        st.markdown(
+            """
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.7rem">
+  <div class="card-title">Similar Supreme Court &amp; High Court Judgments</div>
+  <span class="badge lock">Licensed version</span>
+</div>
+<div class="lock-box">
+  <div class="lock-icon">🔒</div>
+  <div>
+    <div class="lock-title">Available in the licensed version only</div>
+    <div class="lock-text">Similar Supreme Court and High Court cases and judgments are
+    not included in this version.</div>
+  </div>
+</div>
+""",
+            unsafe_allow_html=True,
+        )
+
     st.markdown(
         '<div class="disclaimer"><b>Note:</b> This analysis is AI-generated to support legal research. '
         "Verify all provisions and citations against official sources before relying on it. "
@@ -285,9 +312,7 @@ if "result" in st.session_state:
     )
 
 # ---------------- FOOTER ----------------
-
-#st.markdown(
-    #'<div class="footer">Built with Chroma · BGE embeddings · Groq · Streamlit</div>',
-    #unsafe_allow_html=True,
-#)
-
+st.markdown(
+    '<div class="footer">Built with Chroma · BGE embeddings · Groq · Streamlit</div>',
+    unsafe_allow_html=True,
+)
