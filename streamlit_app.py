@@ -287,7 +287,7 @@ if "result" in st.session_state:
         st.markdown(
             """
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.7rem">
-  <div class="card-title">Similar Supreme Court &amp; High Court Judgments</div>
+  <div class="card-title">References from Supreme Court &amp; High Court Judgments of India</div>
   <span class="badge lock">Licensed version</span>
 </div>
 <div class="lock-box">
