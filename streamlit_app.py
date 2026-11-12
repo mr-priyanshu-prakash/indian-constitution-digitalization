@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(
-    page_title="Indian Legal AI Advisor",
+    page_title="VerdictAI",
     page_icon="⚖️",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -87,10 +87,12 @@ header[data-testid="stHeader"]{background:transparent;}
   -webkit-box-shadow:0 0 0 1000px #eff4ff inset !important;-webkit-text-fill-color:#0b1c30 !important;}
 .stTextInput input, .stTextArea textarea{
   background:var(--low) !important;color:var(--ink) !important;
+  caret-color:var(--ink) !important;-webkit-text-fill-color:var(--ink) !important;
   border:1px solid var(--line) !important;border-radius:6px !important;
   font-family:'Plus Jakarta Sans',sans-serif !important;}
 .stTextInput input:focus, .stTextArea textarea:focus{border-color:var(--navy) !important;box-shadow:none !important;}
-.stTextInput input::placeholder, .stTextArea textarea::placeholder{color:#76777d !important;}
+.stTextInput input::placeholder, .stTextArea textarea::placeholder{
+  color:#76777d !important;-webkit-text-fill-color:#76777d !important;}
 
 /* button */
 .stButton>button{width:100%;background:var(--navy);border:none;border-radius:8px;padding:.7rem 1rem;
@@ -140,8 +142,8 @@ with st.sidebar:
         """
 <div class="side-brand">
   <div class="logo">⚖</div>
-  <div><div class="brand-name">Legal RAG System</div>
-  <div class="brand-sub">Research Workstation</div></div>
+  <div><div class="brand-name">VerdictAI</div>
+  <div class="brand-sub">Prototype</div></div>
 </div>
 """,
         unsafe_allow_html=True,
@@ -168,8 +170,7 @@ st.markdown(
     """
 <div class="topbar">
   <div>
-    <div class="brand-name">Indian Legal AI Advisor</div>
-    <div class="brand-sub">Statutory analysis &amp; legal research</div>
+    <div class="brand-name">VerdictAI</div>
   </div>
   <div class="pill">BNS 2023 · IPC · CrPC · POCSO · Constitution of India</div>
 </div>
