@@ -61,7 +61,7 @@ header[data-testid="stHeader"]{background:transparent;}
 .status-row span:last-child{font-weight:600;}
 
 /* top bar */
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+.topbar{display:flex;align-items:center;justify-content:center;text-align:center;gap:1rem;flex-wrap:wrap;
   padding-bottom:1.1rem;border-bottom:1px solid var(--line);margin-bottom:1.4rem;}
 .topbar .brand-name{font-size:1.5rem;}
 .topbar .pill{font-size:.72rem;font-weight:600;letter-spacing:.04em;padding:.35rem .8rem;border-radius:999px;
@@ -169,10 +169,7 @@ with st.sidebar:
 st.markdown(
     """
 <div class="topbar">
-  <div>
-    <div class="brand-name">VerdictAI</div>
-  </div>
-  <div class="pill">BNS 2023 · IPC · CrPC · POCSO · Constitution of India</div>
+  <div class="brand-name">VerdictAI</div>
 </div>
 
 <div class="notice">
