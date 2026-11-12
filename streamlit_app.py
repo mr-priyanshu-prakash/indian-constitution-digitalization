@@ -304,15 +304,15 @@ if "result" in st.session_state:
             unsafe_allow_html=True,
         )
 
-    st.markdown(
-        '<div class="disclaimer"><b>Note:</b> This analysis is AI-generated to support legal research. '
-        "Verify all provisions and citations against official sources before relying on it. "
-        "It is not a substitute for advice from a qualified advocate.</div>",
-        unsafe_allow_html=True,
-    )
+#    st.markdown(
+#        '<div class="disclaimer"><b>Note:</b> This analysis is AI-generated to support legal research. '
+#        "Verify all provisions and citations against official sources before relying on it. "
+#        "It is not a substitute for advice from a qualified advocate.</div>",
+#        unsafe_allow_html=True,
+#    )
 
 # ---------------- FOOTER ----------------
-st.markdown(
-    '<div class="footer">Built with Chroma · BGE embeddings · Groq · Streamlit</div>',
-    unsafe_allow_html=True,
-)
+#st.markdown(
+#    '<div class="footer">Built with Chroma · BGE embeddings · Groq · Streamlit</div>',
+#    unsafe_allow_html=True,
+#)
